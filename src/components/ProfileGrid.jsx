@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import axios from "axios";
 import CardSkeleton from "./CardSkeleton";
+import { useSearch } from "../searchContext";
 
 const ProfileGrid = () => {
+  const { searchQuery, setSearchQuery } = useSearch();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +16,9 @@ const ProfileGrid = () => {
     const fetchProfiles = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("profiles/");
+        const response = await axios.get("profiles/", {
+          params: { query: searchQuery },
+        });
         setProfiles(response.data);
         console.log(response.data);
       } catch (err) {
@@ -25,7 +29,7 @@ const ProfileGrid = () => {
     };
 
     fetchProfiles();
-  }, []);
+  }, [searchQuery]);
 
   if (loading) {
     const skeletons = Array(4).fill(0); // Or dynamic number based on data

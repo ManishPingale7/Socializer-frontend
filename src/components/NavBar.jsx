@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useSearch } from "../searchContext";
 
 /* eslint-disable react/prop-types */
 
 const NavBar = ({ isLogged, setIsLogged }) => {
-  const [searchString, setSearchString] = useState("");
+  const { searchQuery, setSearchQuery } = useSearch();
+
+  const handleSearch = async (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -70,10 +74,8 @@ const NavBar = ({ isLogged, setIsLogged }) => {
               type="text"
               id="search-navbar"
               className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              value={searchString}
-              onChange={(e) => {
-                setSearchString(e.target.value);
-              }}
+              value={searchQuery}
+              onChange={handleSearch}
               placeholder="Search..."
             />
           </div>
