@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../axiosConfig";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import getLatLong from "../geocode";
 
-const Register = () => {
+const ProfileForm = () => {
+  const { id } = useParams();
+
   const [name, setName] = useState("");
   const [photo, setPhoto] = useState("");
   const [address, setAddress] = useState("");
@@ -12,11 +14,43 @@ const Register = () => {
   const [interest, setInterest] = useState("");
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (id) {
+        try {
+          const response = await axios.get(`profiles/${id}/`, {});
+          if (response) {
+            setName(response.data.name);
+            setPhoto(response.data.photo);
+            setAddress(response.data.address);
+            setUsername(response.data.username);
+            setContact(response.data.contact_info);
+            setInterest(response.data.interests);
+            setDescription(response.data.description);
+          } else {
+            console.log("no dat");
+          }
+        } catch (err) {
+          console.log("catched ", err);
+        }
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  async function makePutRequest(userData) {
+    const response2 = await axios.put(`/profiles/${id}/`, userData);
+    if (response2) console.log("Updated profile successfully");
+    else console.log("err res2");
+  }
 
   async function makePostRequest(userData) {
     const response2 = await axios.post("profiles/", userData, {
@@ -26,18 +60,55 @@ const Register = () => {
     console.log("Created profile successfully");
   }
 
-  const handleRegister = async (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("username", username);
+    formData.append("description", description);
+    formData.append("address", address);
+    formData.append("contact_info", contact);
+    formData.append("interests", interest);
+    formData.append("photo", photo);
+
+    try {
+      const res = await getLatLong(address); // Wait & retrieve lat,long
+
+      if (res) {
+        console.log("Latitude:", res.latitude);
+        console.log("Longitude:", res.longitude);
+
+        formData.append("latitude", res.latitude);
+        formData.append("longitude", res.longitude);
+
+        //updating profile of user
+        await makePutRequest(formData);
+        setLoading(false);
+        navigate(`/profiles/${id}/`);
+      } else {
+        console.log("Location not found");
+      }
+    } catch (err) {
+      console.log("catch", err);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
     const creds = {
       email: email,
       password: password,
       username: email,
     };
 
+    const formData = new FormData();
     formData.append("name", name);
+    formData.append("username", email);
     formData.append("description", description);
     formData.append("address", address);
     formData.append("contact_info", contact);
@@ -87,9 +158,9 @@ const Register = () => {
       <section className="bg-white min-h-screen dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4  text-center text-xl font-bold text-gray-900 dark:text-white">
-            Register on Socializer!
+            {id == undefined ? "Register on Socializer!" : "Edit Profile"}
           </h2>
-          <form onSubmit={handleRegister}>
+          <form onSubmit={id == undefined ? handleRegister : handleEdit}>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
               {/* Name */}
               <div className="sm:col-span-2">
@@ -136,26 +207,30 @@ const Register = () => {
               </div>
 
               {/* Email */}
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
+              {id == undefined ? (
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              ) : (
+                ""
+              )}
 
               {/* Address  */}
               <div className="w-full">
@@ -179,26 +254,30 @@ const Register = () => {
                 />
               </div>
 
-              <div className="w-full">
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  id="password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
+              {id == undefined ? (
+                <div className="w-full">
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    id="password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Enter password"
+                    required
+                  />
+                </div>
+              ) : (
+                ""
+              )}
 
               {/* contact number */}
               <div className="w-full">
@@ -264,12 +343,16 @@ const Register = () => {
               </div>
             </div>
 
-            <Link
-              to="/login"
-              className="text-sm font-light text-gray-500 dark:text-gray-400 font-medium text-primary-600 hover:underline dark:text-primary-500"
-            >
-              Have an account?
-            </Link>
+            {id == undefined ? (
+              <Link
+                to="/login"
+                className="text-sm font-light text-gray-500 dark:text-gray-400 font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >
+                Have an account?
+              </Link>
+            ) : (
+              ""
+            )}
 
             <div className="flex flex-col items-center justify-center">
               <button
@@ -279,8 +362,10 @@ const Register = () => {
               >
                 {loading ? (
                   <div className="animate-spin border-4 border-t-4 border-white rounded-full w-6 h-6 mx-auto" />
-                ) : (
+                ) : id == undefined ? (
                   "Register !"
+                ) : (
+                  "Confirm edit"
                 )}
               </button>
             </div>
@@ -291,4 +376,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ProfileForm;

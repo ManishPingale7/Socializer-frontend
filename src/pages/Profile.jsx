@@ -30,14 +30,13 @@ const Profile = () => {
           console.log(err);
         }
       } else {
-        // id is present->show user's profile
+        // id is not present->show user's profile
         const username = localStorage.getItem("username");
         const password = localStorage.getItem("password");
-        const profileId = localStorage.getItem("id");
 
         if (username && password) {
           try {
-            const response = await axios.get("profiles/" + profileId, {});
+            const response = await axios.get("profiles/" + username, {});
 
             setUserData(response.data); // Store the fetched user data
             setLoading(false); // Set loading to false after data is fetched
@@ -59,7 +58,7 @@ const Profile = () => {
     return (
       <>
         <section className="bg-white min-h-screen dark:bg-gray-900">
-          <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+          <div className="py-6 px-4 mx-auto max-w-screen-xl lg:py-12 lg:px-6">
             <div className="mx-auto max-w-screen-sm text-center">
               <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">
                 404
@@ -84,12 +83,45 @@ const Profile = () => {
       </>
     );
 
-  //show loading
-  if (loading) return <>loading</>;
+  // show loading
+  if (loading)
+    return (
+      <>
+        <section className="py-6 bg-white min-h-screen   md:py-12 dark:bg-gray-900 antialiased">
+          <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
+            <div
+              role="status"
+              className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+            >
+              <div className="flex items-center justify-center w-full h-64 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                <svg
+                  className="w-20 h-20 text-gray-200 dark:text-gray-600"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 18"
+                >
+                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                </svg>
+              </div>
+              <div className="w-full ">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        </section>
+      </>
+    );
 
   return (
     <>
-      <section className="py-8 bg-white  min-h-screen md:py-16 dark:bg-gray-900 antialiased">
+      <section className="py-6 bg-white    md:py-12 dark:bg-gray-900 antialiased">
         <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div className="flex flex-col bg-dark shadow-sm border border-dark-200 rounded-lg my-2 w-96">
@@ -100,14 +132,14 @@ const Profile = () => {
                   alt="profile-picture"
                 />
               </div>
-              <div className="p-6 text-center">
+              <div className="p-4 text-center">
                 <h4 className="mb-1 text-xl font-semibold text-slate-200">
                   {userData.name}
                 </h4>
                 <p className="text-sm font-semibold text-slate-400 uppercase">
-                  Interests:
+                  Contact:
                   <br />
-                  {userData.interests}
+                  {userData.contact_info}
                 </p>
               </div>
             </div>
@@ -122,22 +154,35 @@ const Profile = () => {
                 </p>
               </div>
 
-              <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
-              <p className="mb-6 text-gray-500 dark:text-gray-400">
+              <hr className="my-6 md:my-8 border-gray-300 dark:border-gray-700" />
+              <p className="mb-6 text-gray-500 text-xl dark:text-gray-400">
                 Description: {userData.description}
+              </p>
+
+              <p className="mb-6 text-gray-500 text-xl dark:text-gray-400">
+                Interests: {userData.interests}
+              </p>
+              <p className="mb-6 text-gray-500 text-xl dark:text-gray-400">
+                Coordinates: ({userData.latitude} , {userData.longitude} )
               </p>
             </div>
           </div>
         </div>
       </section>
 
+      <div className="flex dark:bg-gray-900">
+        <h1 className="pb-2 mx-auto  text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
+          Map summary
+        </h1>
+      </div>
+
       <div className="">
-        <div className=" p-3 flex min-h-screen dark:bg-gray-900 justify-center items-center">
+        <div className=" px-3 flex  dark:bg-gray-900 justify-center items-center">
           <MapContainer
             center={[userData.latitude, userData.longitude]}
             zoom={13}
             scrollWheelZoom={false}
-            style={{ width: "100%", height: "500px" }} // Map style for dimensions
+            style={{ width: "100%", height: "600px" }} // Map style for dimensions
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // OpenStreetMap tile layer
@@ -145,11 +190,11 @@ const Profile = () => {
             />
             <Marker position={[userData.latitude, userData.longitude]}>
               <Popup>
-                Coordinates: {userData.latitude}, {userData.longitude}
+                {userData.name}s Coordinates: <br />
+                {userData.latitude}, {userData.longitude}
               </Popup>
             </Marker>
           </MapContainer>
-          );
         </div>
       </div>
     </>

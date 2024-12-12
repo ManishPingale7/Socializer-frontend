@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "../axiosConfig";
 import { useNavigate, Link } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setIsLogged }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ const Login = () => {
       localStorage.setItem("password", password);
 
       console.log("Login successful:", response.data);
+      setIsLogged(true);
       //redirect to home
       navigate("/");
     } catch (err) {

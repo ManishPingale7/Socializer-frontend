@@ -1,4 +1,10 @@
-const NavBar = () => {
+import { useState } from "react";
+
+/* eslint-disable react/prop-types */
+
+const NavBar = ({ isLogged, setIsLogged }) => {
+  const [searchString, setSearchString] = useState("");
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -12,7 +18,7 @@ const NavBar = () => {
             alt="Flowbite Logo"
           />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Flowbite
+            Socializer
           </span>
         </a>
         <div className="flex md:order-2">
@@ -64,6 +70,10 @@ const NavBar = () => {
               type="text"
               id="search-navbar"
               className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={searchString}
+              onChange={(e) => {
+                setSearchString(e.target.value);
+              }}
               placeholder="Search..."
             />
           </div>
@@ -165,19 +175,39 @@ const NavBar = () => {
                 Profile
               </a>
             </li>
-            <li>
-              <a
-                href="/login"
-                className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
-                  location.pathname === "/login"
-                    ? "md:text-blue-700  md:dark:text-blue-500"
-                    : "dark:text-white"
-                }"
+            {isLogged ? (
+              <li>
+                <a
+                  href="/"
+                  onClick={() => {
+                    localStorage.clear();
+                    setIsLogged(false);
+                  }}
+                  className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                    location.pathname === "/login"
+                      ? "md:text-blue-700  md:dark:text-blue-500"
+                      : "dark:text-white"
+                  }"
                 aria-current="page`}
-              >
-                Login
-              </a>
-            </li>
+                >
+                  Log out
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href="/login"
+                  className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                    location.pathname === "/login"
+                      ? "md:text-blue-700  md:dark:text-blue-500"
+                      : "dark:text-white"
+                  }"
+                aria-current="page`}
+                >
+                  Login
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>
