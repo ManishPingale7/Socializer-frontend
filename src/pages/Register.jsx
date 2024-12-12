@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "../axiosConfig";
 import { useNavigate, Link } from "react-router-dom";
+import getLatLong from "../geocode";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -17,6 +18,14 @@ const Register = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  async function makePostRequest(userData) {
+    const response2 = await axios.post("profiles/", userData, {
+      auth: { username: email, password: password },
+    });
+    localStorage.setItem("id", response2.data.id);
+    console.log("Created profile successfully");
+  }
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -27,6 +36,7 @@ const Register = () => {
       password: password,
       username: email,
     };
+
     formData.append("name", name);
     formData.append("description", description);
     formData.append("address", address);
@@ -43,19 +53,30 @@ const Register = () => {
       //save creds
       localStorage.setItem("username", email);
       localStorage.setItem("password", password);
-      //creating profile of user
 
-      const response2 = await axios.post("profiles/", formData, {
-        auth: { username: email, password: password },
-      });
-      localStorage.setItem("id", response2.data.id);
-      console.log("Created profile successfully");
+      try {
+        const res = await getLatLong(address); // Wait & retrieve lat,long
 
-      setLoading(false);
-      navigate("/");
+        if (res) {
+          console.log("Latitude:", res.latitude);
+          console.log("Longitude:", res.longitude);
+
+          formData.append("latitude", res.latitude);
+          formData.append("longitude", res.longitude);
+
+          //creating profile of user
+          await makePostRequest(formData);
+          setLoading(false);
+          navigate("/");
+        } else {
+          console.log("Location not found");
+        }
+      } catch (err) {
+        console.error("Error:", err);
+      }
     } catch (err) {
-      setError("Error occured while fetchinf", err);
-      console.log("Error occured");
+      setError("Error occured while fetching", err);
+      console.log("Error occured...", err);
     } finally {
       setLoading(false);
     }
@@ -153,7 +174,7 @@ const Register = () => {
                     setAddress(e.target.value);
                   }}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Your address "
+                  placeholder="Your city/area "
                   required
                 />
               </div>

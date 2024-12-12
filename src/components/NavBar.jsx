@@ -1,5 +1,3 @@
-import { useLocation } from "react-router-dom";
-
 const NavBar = () => {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -129,8 +127,10 @@ const NavBar = () => {
             <li>
               <a
                 href="/"
-                className={`block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
-                  location.pathname === "/"
+                className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                  location.pathname == "/" ||
+                  location.pathname == "/home" ||
+                  location.pathname == "/"
                     ? "md:text-blue-700  md:dark:text-blue-500"
                     : "dark:text-white"
                 }"
@@ -169,7 +169,7 @@ const NavBar = () => {
               <a
                 href="/login"
                 className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
-                  location.pathname === "/admin"
+                  location.pathname === "/login"
                     ? "md:text-blue-700  md:dark:text-blue-500"
                     : "dark:text-white"
                 }"

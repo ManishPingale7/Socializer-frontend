@@ -1,127 +1,157 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "../axiosConfig";
+import { useParams, Link } from "react-router-dom";
+
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet"; // Leaflet library for map and markers
 
 const Profile = () => {
+  const { id } = useParams();
+  console.log(id);
   const [userData, setUserData] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const username = localStorage.getItem("username");
-      const password = localStorage.getItem("password");
-      const profileId = localStorage.getItem("id");
-
-      if (username && password) {
+      if (id) {
+        // id is present->show given id's profile
         try {
-          const response = await axios.get("profiles/" + profileId, {
-            auth: {
-              username: username,
-              password: password,
-            },
-          });
-
-          setUserData(response.data); // Store the fetched user data
-          setLoading(false); // Set loading to false after data is fetched
-        } catch (error) {
-          setError("Failed to load user profile data.", error);
+          setLoading(true);
+          const respones = await axios.get("profiles/" + id, {});
           setLoading(false);
+          setUserData(respones.data);
+          console.log(respones.data);
+        } catch (err) {
+          setError("Error occured while fetching profile with id:", id);
+          setLoading(false);
+          console.log(err);
         }
       } else {
-        setError("User not logged in.");
-        setLoading(false);
+        // id is present->show user's profile
+        const username = localStorage.getItem("username");
+        const password = localStorage.getItem("password");
+        const profileId = localStorage.getItem("id");
+
+        if (username && password) {
+          try {
+            const response = await axios.get("profiles/" + profileId, {});
+
+            setUserData(response.data); // Store the fetched user data
+            setLoading(false); // Set loading to false after data is fetched
+          } catch (error) {
+            setError("Failed to load user profile data.", error);
+            setLoading(false);
+          }
+        } else {
+          setError("User not logged in.");
+          setLoading(false);
+        }
       }
     };
 
     fetchUserData();
   }, []);
 
+  if (error)
+    return (
+      <>
+        <section className="bg-white min-h-screen dark:bg-gray-900">
+          <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div className="mx-auto max-w-screen-sm text-center">
+              <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">
+                404
+              </h1>
+              <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+                Something went wrong.
+              </p>
+              <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
+                Sorry, please try later, we will work on this.{error}
+              </p>
+
+              <Link
+                to="/"
+                className="inline-flex text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900 my-4"
+              >
+                {" "}
+                Back to Homepage
+              </Link>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+
+  //show loading
+  if (loading) return <>loading</>;
+
   return (
     <>
       <section className="py-8 bg-white  min-h-screen md:py-16 dark:bg-gray-900 antialiased">
         <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
-            <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
-              <img
-                className="w-full dark:hidden"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
-                alt=""
-              />
-              <img
-                className="w-full hidden dark:block"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
-                alt=""
-              />
+            <div className="flex flex-col bg-dark shadow-sm border border-dark-200 rounded-lg my-2 w-96">
+              <div className="m-2.5 overflow-hidden rounded-md h-80 flex justify-center items-center">
+                <img
+                  className="w-full h-full object-cover"
+                  src={userData.photo}
+                  alt="profile-picture"
+                />
+              </div>
+              <div className="p-6 text-center">
+                <h4 className="mb-1 text-xl font-semibold text-slate-200">
+                  {userData.name}
+                </h4>
+                <p className="text-sm font-semibold text-slate-400 uppercase">
+                  Interests:
+                  <br />
+                  {userData.interests}
+                </p>
+              </div>
             </div>
+
             <div className="mt-6 sm:mt-8 lg:mt-0">
               <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
-                Name
+                Name: {userData.name}
               </h1>
               <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
                 <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                  Location
+                  Address: {userData.address}
                 </p>
               </div>
-              <div className="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                <a
-                  href="#"
-                  title=""
-                  className="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                  role="button"
-                >
-                  <svg
-                    className="w-5 h-5 -ms-2 me-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
-                    />
-                  </svg>
-                  Add to favorites
-                </a>
-                <a
-                  href="#"
-                  title=""
-                  className="text-white mt-4 sm:mt-0 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 flex items-center justify-center"
-                  role="button"
-                >
-                  <svg
-                    className="w-5 h-5 -ms-2 me-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6"
-                    />
-                  </svg>
-                  Add to cart
-                </a>
-              </div>
+
               <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
               <p className="mb-6 text-gray-500 dark:text-gray-400">
-                description
+                Description: {userData.description}
               </p>
             </div>
           </div>
         </div>
       </section>
+
+      <div className="">
+        <div className=" p-3 flex min-h-screen dark:bg-gray-900 justify-center items-center">
+          <MapContainer
+            center={[userData.latitude, userData.longitude]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ width: "100%", height: "500px" }} // Map style for dimensions
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // OpenStreetMap tile layer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker position={[userData.latitude, userData.longitude]}>
+              <Popup>
+                Coordinates: {userData.latitude}, {userData.longitude}
+              </Popup>
+            </Marker>
+          </MapContainer>
+          );
+        </div>
+      </div>
     </>
   );
 };
