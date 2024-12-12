@@ -1,3 +1,5 @@
+import { useLocation } from "react-router-dom";
+
 const NavBar = () => {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -59,6 +61,7 @@ const NavBar = () => {
               </svg>
               <span className="sr-only">Search icon</span>
             </div>
+
             <input
               type="text"
               id="search-navbar"
@@ -113,19 +116,25 @@ const NavBar = () => {
                 />
               </svg>
             </div>
+
             <input
               type="text"
-              id="search-navbar"
+              id="search-navbar1"
               className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search..."
             />
           </div>
+
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
               <a
                 href="/"
-                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                aria-current="page"
+                className={`block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                  location.pathname === "/"
+                    ? "md:text-blue-700  md:dark:text-blue-500"
+                    : "dark:text-white"
+                }"
+                aria-current="page`}
               >
                 Home
               </a>
@@ -133,7 +142,12 @@ const NavBar = () => {
             <li>
               <a
                 href="/admin"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                  location.pathname === "/admin"
+                    ? "md:text-blue-700  md:dark:text-blue-500"
+                    : "dark:text-white"
+                }"
+                aria-current="page`}
               >
                 Admin
               </a>
@@ -141,7 +155,12 @@ const NavBar = () => {
             <li>
               <a
                 href="/profile"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                  location.pathname === "/profile"
+                    ? "md:text-blue-700  md:dark:text-blue-500"
+                    : "dark:text-white"
+                }"
+                aria-current="page`}
               >
                 Profile
               </a>
@@ -149,7 +168,12 @@ const NavBar = () => {
             <li>
               <a
                 href="/login"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:p-0 ${
+                  location.pathname === "/admin"
+                    ? "md:text-blue-700  md:dark:text-blue-500"
+                    : "dark:text-white"
+                }"
+                aria-current="page`}
               >
                 Login
               </a>
