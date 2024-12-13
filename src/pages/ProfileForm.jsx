@@ -47,17 +47,36 @@ const ProfileForm = () => {
   }, []);
 
   async function makePutRequest(userData) {
-    const response2 = await axios.put(`/profiles/${id}/`, userData);
-    if (response2) console.log("Updated profile successfully");
-    else console.log("err res2");
+    const responsePut = await axios.put(`/profiles/${id}/`, userData);
+    try {
+      if (responsePut) {
+        console.log("Updated profile successfully");
+      } else {
+        console.log("Can't update ");
+        setError("Can't update error");
+      }
+    } catch (err) {
+      console.log("Catch makePutRequest", err);
+      setError("Catch makePutRequest", err);
+    }
   }
 
   async function makePostRequest(userData) {
-    const response2 = await axios.post("profiles/", userData, {
-      auth: { username: email, password: password },
-    });
-    localStorage.setItem("id", response2.data.id);
-    console.log("Created profile successfully");
+    try {
+      const responsePost = await axios.post("profiles/", userData, {
+        auth: { username: email, password: password },
+      });
+      if (responsePost) {
+        localStorage.setItem("id", responsePost.data.id);
+        console.log("Created profile successfully");
+      } else {
+        setError("Erro occured");
+        console.log("Erro occured", responsePost);
+      }
+    } catch (err) {
+      setError("Catch makePostRequest", err);
+      console.log("Catch makePostRequest", err);
+    }
   }
 
   const handleEdit = async (e) => {
@@ -141,13 +160,15 @@ const ProfileForm = () => {
           navigate("/");
         } else {
           console.log("Location not found");
+          setError("Location not found");
         }
       } catch (err) {
-        console.error("Error:", err);
+        console.error("Error in fetcing coordinates: ", err);
+        setError("Error in fetcing coordinates.. ", err);
       }
     } catch (err) {
-      setError("Error occured while fetching", err);
-      console.log("Error occured...", err);
+      setError("Error occured during registeration", err);
+      console.log("Error occured during registeration...", err);
     } finally {
       setLoading(false);
     }
@@ -157,6 +178,29 @@ const ProfileForm = () => {
     <>
       <section className="bg-white min-h-screen dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+          {error ? (
+            <div
+              className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+              role="alert"
+            >
+              <svg
+                className="flex-shrink-0 inline w-4 h-4 me-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+              </svg>
+              <span className="sr-only">Info</span>
+              <div>
+                <span className="font-medium">Error occured </span> Change a few
+                things up and try submitting again.
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
           <h2 className="mb-4  text-center text-xl font-bold text-gray-900 dark:text-white">
             {id == undefined ? "Register on Socializer!" : "Edit Profile"}
           </h2>
