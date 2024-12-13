@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TableRow from "../components/TableRow";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Admin = () => {
   const [profiles, setProfiles] = useState(null);
@@ -40,9 +41,70 @@ const Admin = () => {
     fetchProfiles();
   }, []);
 
-  if (loading) return <>Loading....</>;
+  // show loading
+  if (loading)
+    return (
+      <>
+        <section className="py-6 bg-white min-h-screen   md:py-12 dark:bg-gray-900 antialiased">
+          <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
+            <div
+              role="status"
+              className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+            >
+              <div className="flex items-center justify-center w-full h-64 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                <svg
+                  className="w-20 h-20 text-gray-200 dark:text-gray-600"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 18"
+                >
+                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                </svg>
+              </div>
+              <div className="w-full ">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5" />
+                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        </section>
+      </>
+    );
 
-  if (error) return <>Error....</>;
+  if (error)
+    return (
+      <>
+        <section className="bg-white min-h-screen dark:bg-gray-900">
+          <div className="py-6 px-4 mx-auto max-w-screen-xl lg:py-12 lg:px-6">
+            <div className="mx-auto max-w-screen-sm text-center">
+              <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">
+                404
+              </h1>
+              <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+                Something went wrong.
+              </p>
+              <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
+                Sorry, please try later, we will work on this.
+              </p>
+
+              <Link
+                to="/"
+                className="inline-flex text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900 my-4"
+              >
+                {" "}
+                Back to Homepage
+              </Link>
+            </div>
+          </div>
+        </section>
+      </>
+    );
 
   return (
     <>
