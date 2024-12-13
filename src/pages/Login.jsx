@@ -41,7 +41,11 @@ const Login = ({ setIsLogged }) => {
           href="#"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img className="w-8 h-8 mr-2" src="src\public\logo.svg" alt="logo" />
+          <img
+            className="w-8 h-8 mr-2"
+            src="https://www.freeiconspng.com/thumbs/network-icon/communication-community-connection-global-internet-network-icon--14.png\public\logo.svg"
+            alt="logo"
+          />
           Socializer
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
