@@ -67,7 +67,9 @@ const Profile = () => {
                 Something went wrong.
               </p>
               <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
-                Sorry, please try later, we will work on this.{error}
+                Sorry, please try later, we will work on this.
+                <br />
+                <h3>{error}</h3>
               </p>
 
               <Link

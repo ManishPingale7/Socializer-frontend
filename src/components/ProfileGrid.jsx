@@ -74,7 +74,7 @@ const ProfileGrid = () => {
   return (
     <>
       {/* Grid */}
-      <div className="grid gap-8 min-h-screen lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-8  lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {profiles.map((profile) => (
           <ProfileCard
             key={profile.id}
