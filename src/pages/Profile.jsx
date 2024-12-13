@@ -138,7 +138,7 @@ const Profile = () => {
   });
   return (
     <>
-      <section className="py-6 bg-white    md:py-12 dark:bg-gray-900 antialiased">
+      <section className="py-6 bg-white min-h-screen   md:py-12 dark:bg-gray-900 antialiased">
         <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div className="flex flex-col bg-dark shadow-sm border border-dark-200 rounded-lg my-2 w-96">

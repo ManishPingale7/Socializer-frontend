@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import TableRow from "../components/TableRow";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ErrorComonent from "../components/ErrorComonent";
 
-const Admin = () => {
+const Admin = ({ isLogged }) => {
   const [profiles, setProfiles] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -106,12 +108,12 @@ const Admin = () => {
       </>
     );
 
-  return (
+  console.log(isLogged);
+  return isLogged ? (
     <>
       <section className="py-6 bg-white min-h-screen   md:py-12 dark:bg-gray-900 antialiased">
         <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
           <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
-            {/* Start coding here */}
             <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
               <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -270,6 +272,13 @@ const Admin = () => {
         </section>
       </section>
     </>
+  ) : (
+    <ErrorComonent
+      code={401}
+      headline="Not authorized"
+      subheadline={"You need to log in before accessing admin"}
+      cta={"login"}
+    />
   );
 };
 

@@ -30,7 +30,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/home" element={<Home />} />
-          <Route exact path="/admin" element={<Admin />} />
+          <Route exact path="/admin" element={<Admin isLogged={isLogged} />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/profiles/:id" element={<Profile />} />
           <Route
