@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://127.0.0.1:8000/api/";
+axios.defaults.baseURL = "https://socializer-backend-rh1z.onrender.com/api/";
 
 const username = localStorage.getItem("username");
 const password = localStorage.getItem("password");
