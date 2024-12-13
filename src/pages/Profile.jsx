@@ -121,6 +121,21 @@ const Profile = () => {
       </>
     );
 
+  const LeafIcon = L.Icon.extend({
+    options: {
+      iconSize: [40, 40],
+      shadowSize: [50, 64],
+      iconAnchor: [22, 94],
+      shadowAnchor: [4, 62],
+      popupAnchor: [-3, -76],
+    },
+  });
+
+  const customIcon = new LeafIcon({
+    iconUrl:
+      "https://static-00.iconduck.com/assets.00/map-marker-icon-171x256-xkl73sge.png",
+    shadowUrl: "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
+  });
   return (
     <>
       <section className="py-6 bg-white    md:py-12 dark:bg-gray-900 antialiased">
@@ -190,7 +205,11 @@ const Profile = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // OpenStreetMap tile layer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <Marker position={[userData.latitude, userData.longitude]}>
+
+            <Marker
+              position={[userData.latitude, userData.longitude]}
+              icon={customIcon}
+            >
               <Popup>
                 {userData.name}s Coordinates: <br />
                 {userData.latitude}, {userData.longitude}

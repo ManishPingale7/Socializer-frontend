@@ -43,7 +43,7 @@ const Login = ({ setIsLogged }) => {
         >
           <img
             className="w-8 h-8 mr-2"
-            src="https://www.freeiconspng.com/thumbs/network-icon/communication-community-connection-global-internet-network-icon--14.png\public\logo.svg"
+            src="https://www.freeiconspng.com/thumbs/network-icon/communication-community-connection-global-internet-network-icon--14.png"
             alt="logo"
           />
           Socializer
